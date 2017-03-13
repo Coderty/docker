@@ -37,6 +37,12 @@ RUN apt-get update \
 		mysql-server \
 		wget \
 		unzip \
+		curl  \
+		git  \
+		openssh-server \
+		openssl \ 
+		build-essential \
+		libssl-dev \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install iconv intl mcrypt opcache pdo mysql pdo_mysql mbstring soap gd zip
@@ -60,6 +66,13 @@ COPY config_files/php.ini /usr/local/etc/php/
 RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 EXPOSE 3306
 
+# SSH
+RUN mkdir /var/run/sshd
+RUN echo 'root:admin' |chpasswd
+RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+
+VOLUME /var/www/html/
 VOLUME /var/www/html/modules
 VOLUME /var/www/html/themes
 VOLUME /var/www/html/override

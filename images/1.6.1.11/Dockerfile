@@ -71,6 +71,7 @@ RUN mkdir /var/run/sshd
 RUN echo 'root:admin' |chpasswd
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+EXPOSE 22
 
 VOLUME /var/www/html/
 VOLUME /var/www/html/modules
